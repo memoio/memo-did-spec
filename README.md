@@ -1,88 +1,89 @@
 # memo-did-spec
+
 ## Abstract
 
-MEMO DID是基于区块链的去中心化，开放的跨链账户系统。MEMO DID为不同区块链的用户提供自主且全球唯一的账户，可用于管理数字资产，身份认证等场景。
+MEMO DID is a blockchain-based, decentralized, and open cross-chain account system. It provides users across different blockchains with autonomous and globally unique accounts, which can be used for managing digital assets, identity authentication, and other scenarios.
 
-本文档描述了一种全新的DID方法——MEMO DID，并描述了如何对MEMO DID文档进行CRUD操作。
+This document describes a novel DID method—MEMO DID—and outlines how to perform CRUD operations on MEMO DID documents.
 
 ## DID Format
 
-MEMO DID的组成如下：
+The composition of a MEMO DID is as follows:
 
-> **DID组成**
+> **DID Composition**
 >
-> ```http
-> did:memo:<memo-specific-id>
+> ```
+> did:memo:<memo-specific-id>  
 > ```
 
-一个DID例子如下：
+An example of a DID is:
 
-> **DID用例**
+> **DID Example**
 >
-> ```http
-> did:memo:ce5ac89f84530a1cf2cdee5a0643045a8b0a4995b1c765ba289d7859cfb1193e
+> ```
+> did:memo:ce5ac89f84530a1cf2cdee5a0643045a8b0a4995b1c765ba289d7859cfb1193e  
 > ```
 
-其中<font color="red">`<memo-specific-id>`</font>=<font color="red">`hex(hash(address))`</font>
+Where `<memo-specific-id>` = `hex(hash(address))`.
 
-<font color="red">`<address>`</font>是以太坊地址。
+`<address>` is an Ethereum address.
 
-## DID Url Format
+## DID URL Format
 
-MEMO DID URL组成如下：
+The composition of a MEMO DID URL is as follows:
 
->**DID URL组成**
+> **DID URL Composition**
 >
->```http
->did:memo:<memo-specific-id> path [ ? <query> ] [ # <fragment> ]
->```
-
-一些DID URL例子如下：
-
-> **DID URL例子1**
->
-> ```http
-> did:memo:ce5ac89f84530a1cf2cdee5a0643045a8b0a4995b1c765ba289d7859cfb1193e#masterKey
+> ```
+> did:memo:<memo-specific-id> path [ ? <query> ] [ # <fragment> ]  
 > ```
 
-> **DID URL例子2**
+Some examples of DID URLs are:
+
+> **DID URL Example 1**
 >
-> ```http
-> did:memo:ce5ac89f84530a1cf2cdee5a0643045a8b0a4995b1c765ba289d7859cfb1193e#key-1
+> ```
+> did:memo:ce5ac89f84530a1cf2cdee5a0643045a8b0a4995b1c765ba289d7859cfb1193e#masterKey  
 > ```
 
-支持以下path:
+> **DID URL Example 2**
+>
+> ```
+> did:memo:ce5ac89f84530a1cf2cdee5a0643045a8b0a4995b1c765ba289d7859cfb1193e#key-1  
+> ```
 
-- 暂无
+Supported paths:
 
-支持以下query：
+- None currently.
 
-- 暂无
+Supported queries:
 
-支持以下fragment：
+- None currently.
 
-- <font color="red">`#masterKey`</font>：指定主公钥；
-- <font color="red">`#key-<n>`</font>：指定其他的公钥；
+Supported fragments:
+
+- `#masterKey`: Specifies the master public key.
+- `#key-<n>`: Specifies other public keys.
 
 ## CRUD Operation
 
 ### Create
 
-创建MEMO DID需要调用MEMO DID Server的接口，请查阅接口文档。此外，在创建MEMO DID之前，需要使用钱包创建公私钥并生成地址。创建MEMO DID的流程如下：
+Creating a MEMO DID requires calling the MEMO DID Server's API. Please refer to the API documentation. Additionally, before creating a MEMO DID, you need to use a wallet to generate a public-private key pair and derive an address. The process for creating a MEMO DID is as follows:
 
-1. 调用MEMO DID Server的/did/create接口，传入区块链名词以及地址，接口会返回需要签名的消息；
-2. 调用钱包的signMessage接口对消息进行签名；
-3. 调用MEMO DID Server的/did/create/confirm接口，传入消息以及签名；
+1. Call the `/did/create` endpoint of the MEMO DID Server, passing the blockchain name and address. The endpoint will return a message to be signed.
+2. Call the wallet's `signMessage` function to sign the message.
+3. Call the `/did/create/confirm` endpoint of the MEMO DID Server, passing the message and the signature.
 
-在完成上述三个步骤后，MEMO DID Server会生成交易并为您创建一个独属于您的MEMO DID。
+After completing these three steps, the MEMO DID Server will generate a transaction and create a unique MEMO DID for you.
 
 ### Read
 
-MEMO DID Server提供了MEMO DID Resolver服务，可以通过MEMO DID Resolver解析得到MEMO DID文档。
+The MEMO DID Server provides a MEMO DID Resolver service, which can be used to resolve and retrieve MEMO DID documents.
 
-一些DID文档的例子如下：
+Some examples of DID documents are:
 
-> **DID文档例子1**
+> **DID Document Example 1**
 >
 > ```http
 > {
@@ -93,23 +94,23 @@ MEMO DID Server提供了MEMO DID Resolver服务，可以通过MEMO DID Resolver�
 > 		"controller": "did:memo:0000000000000000000000000000000000000000000000000000000000000000",
 > 		"type": "EcdsaSecp256k1VerificationKey2019",
 > 		"publicKeyHex": "0x03d21e6c4843fa3f5d019e551131106e2075925b01da2a83dc177879a512eb608f"
->  }],
->  "authentication": [
->  	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
->  ],
->  "assertionMethod": [
->  	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
->  ],
->  "capabilityDelegation": [
->  	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
->  ],
->  "recovery": [
->  	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
->  ]
+> }],
+> "authentication": [
+> 	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
+> ],
+> "assertionMethod": [
+> 	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
+> ],
+> "capabilityDelegation": [
+> 	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
+> ],
+> "recovery": [
+> 	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
+> ]
 > }
 > ```
 
-> **DID文档例子2**
+> **DID Document Example 2**
 >
 > ```http
 > {
@@ -120,45 +121,44 @@ MEMO DID Server提供了MEMO DID Resolver服务，可以通过MEMO DID Resolver�
 > 		"controller": "did:memo:0000000000000000000000000000000000000000000000000000000000000000",
 > 		"type": "EcdsaSecp256k1VerificationKey2019",
 > 		"publicKeyHex": "0x03d21e6c4843fa3f5d019e551131106e2075925b01da2a83dc177879a512eb608f"
->  },
->  {
->  	"id": "did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#key-1",
->  	"controller": "did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96",
->  	"type": "EcdsaSecp256k1RecoveryMethod2020",
->  	"blockchainAccountId": "0x4Ca0Da3bF629F194e1A8c06A406442B6ac2169A5"
->  }],
->  "authentication": [
->  	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
->  ],
->  "assertionMethod": [
->  	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
->  ],
->  "capabilityDelegation": [
->  	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#key-1"
->  ],
->  "recovery": [
->  	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
->  ]
+> },
+> {
+> 	"id": "did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#key-1",
+> 	"controller": "did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96",
+> 	"type": "EcdsaSecp256k1RecoveryMethod2020",
+> 	"blockchainAccountId": "0x4Ca0Da3bF629F194e1A8c06A406442B6ac2169A5"
+> }],
+> "authentication": [
+> 	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
+> ],
+> "assertionMethod": [
+> 	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
+> ],
+> "capabilityDelegation": [
+> 	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#key-1"
+> ],
+> "recovery": [
+> 	"did:memo:d687daa192ffa26373395872191e8502cc41fbfbf27dc07d3da3a35de57c2d96#masterKey"
+> ]
 > }
 > ```
 
 ### Update
 
-修改MEMO DID文档信息同样需要调用MEMO DID Server的接口。其流程如下：
+Modifying a MEMO DID document also requires calling the MEMO DID Server's API. The process is as follows:
 
-1. 调用MEMO DID Server的/did/update接口，传入需要修改的信息，接口会返回需要签名的消息；
-2. 调用钱包的signMessage接口对消息进行签名，需要使用masterKey对应的私钥进行签名；
-3. 调用MEMO DID Server的/did/update/confirm接口，传入消息以及签名；
+1. Call the `/did/update` endpoint of the MEMO DID Server, passing the information to be updated. The endpoint will return a message to be signed.
+2. Call the wallet's `signMessage` function to sign the message, using the private key corresponding to the `masterKey`.
+3. Call the `/did/update/confirm` endpoint of the MEMO DID Server, passing the message and the signature.
 
-在完成上述三个步骤后，MEMO DID Server会生成交易并为您修改MEMO DID文档的信息。
+After completing these three steps, the MEMO DID Server will generate a transaction and update the MEMO DID document for you.
 
 ### Delete
 
-删除MEMO DID同样需要调用MEMO DID Server的接口。其流程如下：
+Deleting a MEMO DID also requires calling the MEMO DID Server's API. The process is as follows:
 
-1. 调用MEMO DID Server的/did/delete接口，传入需要删除的DID，接口会返回需要签名的消息；
-2. 调用钱包的signMessage接口对消息进行签名，需要使用masterKey对应的私钥进行签名；
-3. 调用MEMO DID Server的/did/delete/confirm接口，传入消息以及签名；
+1. Call the `/did/delete` endpoint of the MEMO DID Server, passing the DID to be deleted. The endpoint will return a message to be signed.
+2. Call the wallet's `signMessage` function to sign the message, using the private key corresponding to the `masterKey`.
+3. Call the `/did/delete/confirm` endpoint of the MEMO DID Server, passing the message and the signature.
 
-在完成上述三个步骤后，MEMO DID Server会生成交易并为您修改MEMO DID文档的信息。
-
+After completing these three steps, the MEMO DID Server will generate a transaction and delete the MEMO DID document for you.
